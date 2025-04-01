@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ダッシュボード</title>
+    <style>
+      
+
+      h2, h1 {
+    margin-bottom: 30px;    /* 以前の10pxから30pxに変更 */
+    color: #333;
+    font-size: 1.5em;       /* フォントサイズを大きくする */
+}
+
+input[type="password"] {
+    width: 100%;
+    padding: 15px;          /* パディングを増やす */
+    margin-bottom: 30px;    /* 以前の15pxから30pxに変更 */
+    border: 1px solid #ccc;
+    border-radius: 5px;     /* ボーダー半径を大きくする */
+    font-size: 1.2em;       /* フォントサイズを大きくする */
+}
+
+button {
+    padding: 15px;          /* パディングを増やす */
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;     /* ボーダー半径を大きくする */
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.2em;       /* フォントサイズを大きくする */
+    margin-top: 20px;       /* ボタン上部にマージンを追加して下に移動 */
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+#message {
+    margin-top: 20px;       /* マージンを広げる */
+    color: red;
+    font-size: 1.1em;       /* フォントサイズを大きくする */
+}
+
+a {
+    display: block;
+    margin: 20px 0;         /* マージンを増やす */
+    text-decoration: none;
+    color: #007bff;
+    font-size: 1.2em;       /* フォントサイズを大きくする */
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+footer {
+        text-align: center;
+        padding: 20px;
+        background-color: #f1f1f1;
+      }
+    </style>
+</head>
+<body>
+
+<div id="container">
+    <div id="passwordForm" style="display: block;"> <!-- 最初には表示 -->
+        <h2>パスワードを入力してください</h2>
+        <input type="password" id="password" placeholder="パスワード">
+        <button onclick="checkPassword()">送信</button>
+        <p id="message"></p>
+    </div>
+
+    <div id="dashboard" style="display: none;">
+        <h1>ダッシュボード</h1>
+        <a href="#" onclick="showContent('rulePage')">ルール</a>
+        <a href="#" onclick="showContent('applyPage')">応募フォーム</a>
+        <a href="#" onclick="showContent('questionPage')">質問</a>
+        <button onclick="logout()">ログアウト</button>
+    </div>
+
+    <div id="rulePage" style="display: none;">
+        <h1>ルール</h1>
+        <p>ここにルールを記載します。</p>
+        <button onclick="showContent('dashboard')">ダッシュボードに戻る</button>
+    </div>
+
+    <div id="applyPage" style="display: none;">
+        <h1>応募フォーム</h1>
+        <p><a href="https://docs.google.com/forms/d/e/YOUR_GOOGLE_FORM_ID/viewform" target="_blank">Googleフォームに応募する</a></p>
+        <button onclick="showContent('dashboard')">ダッシュボードに戻る</button>
+    </div>
+
+    <div id="questionPage" style="display: none;">
+        <h1>質問</h1>
+        <p>ここに質問を記載します。</p>
+<p><a href="https://forms.gle/2vDhw1Vgp3py1MHs7" target="_blank">質問する</a></p>
+        <button onclick="showContent('dashboard')">ダッシュボードに戻る</button>
+    </div>
+</div>
+
+<script>
+    function checkPassword() {
+        const correctPassword = "rikasai123"; // 正しいパスワードを設定
+        const inputPassword = document.getElementById("password").value;
+        const message = document.getElementById("message");
+        const passwordForm = document.getElementById("passwordForm");
+        const dashboard = document.getElementById("dashboard");
+
+        if (inputPassword === correctPassword) {
+            passwordForm.style.display = "none"; // パスワードフォームを非表示
+            dashboard.style.display = "block"; // ダッシュボードを表示
+        } else {
+            message.textContent = "パスワードが間違っています。"; // エラーメッセージを表示
+        }
+    }
+
+    function showContent(contentId) {
+        document.getElementById("dashboard").style.display = "none";
+        document.getElementById("rulePage").style.display = "none";
+        document.getElementById("applyPage").style.display = "none";
+        document.getElementById("questionPage").style.display = "none";
+
+        document.getElementById(contentId).style.display = "block"; // 選択したコンテンツを表示
+    }
+
+    function logout() {
+        document.getElementById("passwordForm").style.display = "block"; // ログインフォームを再表示
+        document.getElementById("dashboard").style.display = "none"; // ダッシュボードを非表示
+        document.getElementById("rulePage").style.display = "none"; // ルールページを非表示
+        document.getElementById("applyPage").style.display = "none"; // 応募ページを非表示
+        document.getElementById("questionPage").style.display = "none"; // 質問ページを非表示
+        document.getElementById("password").value = ""; // パスワードフィールドをクリア
+    }
+</script>
+<footer>
+    <p>&copy; 2025梨花祭　千葉英和高校生徒会. All rights reserved.</p>
+  </footer>
+</body>
+</html>

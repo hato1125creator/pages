@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>新しいページタイトル</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+          /* 全体的なスタイル */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* より洗練されたフォント */
+            background-color: #f8f8f8; /* ライトグレーの背景 */
+            color: #333; /* ダークグレーのテキスト */
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* メニューバーのスタイル */
+        .menu {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* わずかな影 */
+            border-radius: 8px;
+            overflow: hidden; /* 角丸をクリップ */
+        }
+
+        .menu a {
+            color: #555; /* 少し暗めの色 */
+            text-decoration: none;
+            padding: 15px 25px;
+            margin: 0 10px;
+            transition: background-color 0.3s, color 0.3s;
+            border-radius: 8px;
+        }
+
+        .menu a:hover {
+            background-color: #eee; /* ホバー時の背景色 */
+            color: #007bff; /* ホバー時のテキスト色 */
+        }
+
+        /* 検索入力フィールドのスタイル */
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            margin: 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box; /* パディングを考慮 */
+            background-color: #fff; /* 白い背景 */
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #007bff; /* フォーカス時のボーダー色 */
+            outline: none; /* デフォルトのアウトラインを削除 */
+        }
+
+        /* リストのスタイル */
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 15px 0;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.08); /* 控えめな影 */
+            overflow: hidden; /* 角丸をクリップ */
+            transition: transform 0.2s;
+        }
+
+        li:hover {
+            transform: translateY(-2px); /* ホバー時の浮遊感 */
+        }
+
+        li a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        li a:hover {
+            background-color: #f0f0f0;
+        }
+
+        li img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover; /* 画像をコンテナに合わせてクロップ */
+            border-radius: 8px;
+            margin-right: 15px;
+            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* モーダルウィンドウのスタイル */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 700px;
+            position: relative; /* 閉じるボタンのために必要 */
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .modal .close {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .modal .close:hover {
+            color: #333;
+        }
+
+        /* 戻るボタンのスタイル */
+        .back-button {
+            background-color: #007bff; /* 青色 */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 15px 30px;
+            margin: 25px auto;
+            display: block;
+            width: auto; /* 幅を内容に合わせて調整 */
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-size: 16px;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        /* カテゴリー選択のスタイル */
+        .category-select {
+            margin: 25px 0;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.08);
+        }
+
+        .category-select h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5em; /* 見出しのサイズを大きく */
+            text-align: center;
+        }
+
+        .category-select ul {
+            list-style: none;
+            padding: 0;
+            display: flex; /* 横並びに */
+            flex-wrap: wrap; /* 必要に応じて折り返し */
+            justify-content: center; /* 中央揃え */
+        }
+
+        .category-select li {
+            margin: 5px 10px; /* 左右のマージンを調整 */
+        }
+
+        .category-select label {
+            color: #555;
+            font-size: 14px;
+            display: inline-block;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+            border: 1px solid #ccc;
+        }
+
+        .category-select input[type="checkbox"]:checked + label {
+            background-color: #007bff; /* チェック時の背景色 */
+            color: white;
+            border-color: #007bff;
+        }
+
+        /* メディアクエリ */
+        @media (max-width: 600px) {
+            .menu {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .menu a {
+                margin: 8px 0;
+                padding: 12px 20px;
+            }
+
+            .modal-content {
+                width: 90%;
+            }
+
+            .category-select ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .category-select li {
+                margin: 5px 0;
+            }
+        }
+
+         footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            margin-top: 30px;
+            color: #777; /* フッターのテキストカラー */
+            font-size: 0.9em; /* フッターのフォントサイズを小さく */
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <a href="index.html">ホーム</a>
+        <a href="index.html#about">Inform</a>
+        <a href="index.html#contact">Rule</a>
+        <a href="index.html#services">Access</a>
+        <a href="index.html#new-section">新しい情報</a>
+    </div>
+
+    <!-- カテゴリー選択セクション -->
+    <div class="category-select">
+        <h2>カテゴリー選択</h2>
+        <ul>
+            <li>
+                <input type="checkbox" id="category-1年" name="category" />
+                <label for="category-1年">1年</label>
+            </li>
+            <li>
+                <input type="checkbox" id="category-2年" name="category" />
+                <label for="category-2年">2年</label>
+            </li>
+            <li>
+                <input type="checkbox" id="category-3年" name="category" />
+                <label for="category-3年">3年</label>
+            </li>
+            <li>
+                <input type="checkbox" id="category-部活" name="category" />
+                <label for="category-部活">部活</label>
+            </li>
+            <!-- 必要に応じてさらにカテゴリを追加 -->
+        </ul>
+    </div>
+
+    <!-- 検索入力フィールド -->
+    <input
+        type="text"
+        id="myInput"
+        onkeyup="myFunction()"
+        placeholder="検索したい言葉を入力してください."
+    />
+    <button class="back-button" onclick="search()">検索</button>
+
+    <!-- モーダルウィンドウ -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">×</span>
+            <img id="modalImage" src="" alt="" />
+            <div id="modalText" style="display: flex; align-items: center">
+                <!-- テキスト情報はここに入る -->
+            </div>
+        </div>
+    </div>
+
+    <ul id="myUL">
+        <li>
+            <a href="javascript:void(0);" onclick="openModal('1年1組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="1年1組" style="width: 100px; height: auto; margin-right: 10px;" />
+                1年1組
+            </a>
+        </li>
+        <li>
+            <a href="javascript:void(0);" onclick="openModal('1年2組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="1年2組" style="width: 100px; height: auto; margin-right: 10px;" />
+                1年2組
+            </a>
+        </li>
+        <li>
+            <a href="javascript:void(0);" onclick="openModal('1年3組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="1年3組" style="width: 100px; height: auto; margin-right: 10px;" />
+                1年3組
+            </a>
+        </li>
+        <li>
+            <a href="javascript:void(0);" onclick="openModal('1年4組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="1年4組" style="width: 100px; height: auto; margin-right: 10px;" />
+                1年4組
+            </a>
+        </li>
+        <li>
+            <a href="javascript:void(0);" onclick="openModal('1年5組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="1年5組" style="width: 100px; height: auto; margin-right: 10px;" />
+                1年5組
+            </a>
+        </li>
+        <li>
+            <a href="javascript:void(0);" onclick="openModal('1年6組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="1年6組" style="width: 100px; height: auto; margin-right: 10px;" />
+                1年6組
+            </a>
+        </li>
+        <li>
+            <a href="javascript:void(0);" onclick="openModal('1年7組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="1年7組" style="width: 100px; height: auto; margin-right: 10px;" />
+                1年7組
+            </a>
+        </li>
+        <li>
+            <a href="javascript:void(0);" onclick="openModal('1年8組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="1年8組" style="width: 100px; height: auto; margin-right: 10px;" />
+                1年8組
+            </a>
+        </li>
+        <li>
+            <a href="javascript:void(0);" onclick="openModal('1年9組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="1年9組" style="width: 100px; height: auto; margin-right: 10px;" />
+                1年9組
+            </a>
+        </li>
+        <li>
+            <a href="javascript:void(0);" onclick="openModal('1年10組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="1年10組" style="width: 100px; height: auto; margin-right: 10px;" />
+                1年10組
+            </a>
+        </li>
+        <li>
+            <a href="javascript:void(0);" onclick="openModal('1年11組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="1年11組" style="width: 100px; height: auto; margin-right: 10px;" />
+                1年11組
+            </a>
+        </li>
+
+
+        <ul>
+            <li>
+                <a href="javascript:void(0);" onclick="openModal('2年1組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                    <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="2年1組" style="width: 100px; height: auto; margin-right: 10px;" />
+                    2年1組
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" onclick="openModal('2年2組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                    <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="2年2組" style="width: 100px; height: auto; margin-right: 10px;" />
+                    2年2組
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" onclick="openModal('2年3組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                    <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="2年3組" style="width: 100px; height: auto; margin-right: 10px;" />
+                    2年3組
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" onclick="openModal('2年4組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                    <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="2年4組" style="width: 100px; height: auto; margin-right: 10px;" />
+                    2年4組
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" onclick="openModal('2年5組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                    <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="2年5組" style="width: 100px; height: auto; margin-right: 10px;" />
+                    2年5組
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" onclick="openModal('2年6組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                    <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="2年6組" style="width: 100px; height: auto; margin-right: 10px;" />
+                    2年6組
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" onclick="openModal('2年7組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                    <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="2年7組" style="width: 100px; height: auto; margin-right: 10px;" />
+                    2年7組
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" onclick="openModal('2年8組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                    <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="2年8組" style="width: 100px; height: auto; margin-right: 10px;" />
+                    2年8組
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" onclick="openModal('2年9組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                    <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="2年9組" style="width: 100px; height: auto; margin-right: 10px;" />
+                    2年9組
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:void(0);" onclick="openModal('2年9組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                    <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="2年9組" style="width: 100px; height: auto; margin-right: 10px;" />
+                    2年E組
+                </a>
+            </li>
+            
+                <li>
+                    <a href="javascript:void(0);" onclick="openModal('3年1組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                        <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="3年1組" style="width: 100px; height: auto; margin-right: 10px;" />
+                        3年1組
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" onclick="openModal('3年2組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                        <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="3年2組" style="width: 100px; height: auto; margin-right: 10px;" />
+                        3年2組
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" onclick="openModal('3年3組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                        <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="3年3組" style="width: 100px; height: auto; margin-right: 10px;" />
+                        3年3組
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" onclick="openModal('3年4組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                        <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="3年4組" style="width: 100px; height: auto; margin-right: 10px;" />
+                        3年4組
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" onclick="openModal('3年5組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                        <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="3年5組" style="width: 100px; height: auto; margin-right: 10px;" />
+                        3年5組
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" onclick="openModal('3年6組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                        <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="3年6組" style="width: 100px; height: auto; margin-right: 10px;" />
+                        3年6組
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" onclick="openModal('3年7組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                        <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="3年7組" style="width: 100px; height: auto; margin-right: 10px;" />
+                        3年7組
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" onclick="openModal('3年8組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                        <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="3年8組" style="width: 100px; height: auto; margin-right: 10px;" />
+                        3年8組
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" onclick="openModal('3年9組の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                        <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="3年9組" style="width: 100px; height: auto; margin-right: 10px;" />
+                        3年9組
+                    </a>
+                </li>
+                
+                    
+                
+                    <li>
+                        <a href="javascript:void(0);" onclick="openModal('吹奏楽部の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                            <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="【部活】吹奏楽部" style="width: 100px; height: auto; margin-right: 10px;" />
+                            【部活】吹奏楽部
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" onclick="openModal('演劇部の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                            <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="【部活】演劇部" style="width: 100px; height: auto; margin-right: 10px;" />
+                            【部活】演劇部
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" onclick="openModal('美術部の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                            <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="【部活】美術部" style="width: 100px; height: auto; margin-right: 10px;" />
+                            【部活】美術部
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" onclick="openModal('書道部の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                            <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="【部活】書道部" style="width: 100px; height: auto; margin-right: 10px;" />
+                            【部活】書道部
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" onclick="openModal('家庭科部の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                            <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="【部活】家庭科部" style="width: 100px; height: auto; margin-right: 10px;" />
+                            【部活】家庭科部
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" onclick="openModal('科学部の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                            <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="【部活】科学部" style="width: 100px; height: auto; margin-right: 10px;" />
+                            【部活】科学部
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" onclick="openModal('写真部の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                            <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="【部活】写真部" style="width: 100px; height: auto; margin-right: 10px;" />
+                            【部活】写真部
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" onclick="openModal('放送部の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                            <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="【部活】放送部" style="width: 100px; height: auto; margin-right: 10px;" />
+                            【部活】放送部
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" onclick="openModal('文芸部の詳細です', 'https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png')">
+                            <img src="https://imgcp.aacdn.jp/img-a/800/auto/aa/gm/article/4/7/6/8/2/9/201809171509/aelement.png" alt="【部活】文芸部" style="width: 100px; height: auto; margin-right: 10px;" />
+                            【部活】文芸部
+                        </a>
+                    </li>
+                
+                </ul>
+        </ul>
+
+    </ul>
+
+    <!-- 戻るボタン -->
+    <div style="text-align: center; margin: 20px">
+        <button class="back-button" onclick="window.location.href='index.html'">戻る</button>
+    </div>
+
+    <script>
+        function myFunction() {
+            var input, filter, ul, li, a, i, txtValue;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            ul = document.getElementById("myUL");
+            li = ul.getElementsByTagName("li");
+
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName("a")[0];
+                txtValue = a.textContent || a.innerText;
+                li[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+            }
+        }
+
+        function openModal(detail, imgSrc) {
+            document.getElementById("modalImage").src = imgSrc; // 画像を設定
+            document.getElementById("modalText").innerText = detail; // 詳細を設定
+            document.getElementById("myModal").style.display = "block"; // モーダルを表示
+        }
+
+        function closeModal() {
+            document.getElementById("myModal").style.display = "none"; // モーダルを非表示
+        }
+
+        // モーダル背景をクリックしたときに非表示にする
+        window.onclick = function (event) {
+            var modal = document.getElementById("myModal");
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+
+        // カテゴリーのチェックボックスを取得
+        var categories = document.getElementsByName("category");
+
+        // 選択されたカテゴリに基づいてアイテムを検索する関数を定義
+        function search() {
+            var input = document.getElementById("myInput").value;
+            var filter = input.toUpperCase();
+            var ul = document.getElementById("myUL");
+            var li = ul.getElementsByTagName("li");
+            var categoryChecked = Array.from(categories).some(category => category.checked);
+
+            for (var j = 0; j < li.length; j++) {
+                var a = li[j].getElementsByTagName("a")[0];
+                var txtValue = a.textContent || a.innerText;
+                var matchesCategory = categoryChecked ? Array.from(categories).some(cat => cat.checked && txtValue.includes(cat.id.replace("category-", ""))) : true;
+
+                li[j].style.display = (matchesCategory && txtValue.toUpperCase().indexOf(filter) > -1) ? "" : "none";
+            }
+        }
+    </script>
+     <footer>
+        <p>© 2025梨花祭　千葉英和高校生徒会. All rights reserved.</p>
+      </footer>
+</body>
+</html>
+もっとポップにして赤系

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF to Image Example</title>
+    <style>
+        /* カテゴリーごとのクラス位置を隠す */
+        .class-location {
+            display: none;
+        }
+
+        footer {
+        text-align: center;
+        padding: 20px;
+        background-color: #f1f1f1;
+      }
+    </style>
+</head>
+<body>
+
+<!-- PDFを表示するためのcanvas -->
+<canvas id="pdf-canvas" width="800" height="600"></canvas>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+<script>
+// PDFファイルのURL（PDFファイルへのパス）
+const pdfUrl = 'map.pdf';
+
+// PDF.jsでPDFファイルを読み込む
+pdfjsLib.getDocument(pdfUrl).promise.then(function(pdf) {
+    // 最初のページを取得
+    pdf.getPage(1).then(function(page) {
+        const scale = 1.5;  // ズーム倍率（サイズ調整）
+        const viewport = page.getViewport({ scale: scale });
+
+        // canvasの描画コンテキストを取得
+        const canvas = document.getElementById('pdf-canvas');
+        const context = canvas.getContext('2d');
+
+        // PDFページをcanvasに描画
+        page.render({
+            canvasContext: context,
+            viewport: viewport
+        });
+    });
+});
+</script>
+
+<!-- クラス位置のSVG（クリック可能エリア） -->
+<svg width="800" height="600" style="position: absolute; top: 0; left: 0;">
+    <!-- クラスA -->
+    <rect x="100" y="150" width="100" height="100" fill="transparent" stroke="blue" class="class-location arts" onclick="showClassDetails('Class A')"/>
+    <!-- クラスB -->
+    <rect x="300" y="150" width="100" height="100" fill="transparent" stroke="blue" class="class-location music" onclick="showClassDetails('Class B')"/>
+    <!-- 他のクラスのエリアも追加 -->
+</svg>
+
+<!-- カテゴリー検索 -->
+<div id="category-search">
+    <select onchange="highlightCategoryClasses(this.value)">
+        <option value="all">すべてのクラス</option>
+        <option value="arts">芸術</option>
+        <option value="music">音楽</option>
+        <option value="drama">演劇</option>
+    </select>
+</div>
+
+<script>
+// クラス詳細を表示する関数
+function showClassDetails(className) {
+    alert(className + "の詳細が表示されます。");
+    // 詳細を表示するコードをここに追加
+}
+
+// カテゴリー選択に基づいてクラスをハイライトする関数
+function highlightCategoryClasses(category) {
+    // すべてのクラスを非表示にする
+    let allClasses = document.querySelectorAll('.class-location');
+    allClasses.forEach(function(classElement) {
+        classElement.style.display = 'none';
+    });
+    
+    // 選択したカテゴリーに対応するクラスを表示
+    if (category === 'all') {
+        allClasses.forEach(function(classElement) {
+            classElement.style.display = 'block';
+        });
+    } else {
+        let categoryClasses = document.querySelectorAll('.class-location.' + category);
+        categoryClasses.forEach(function(classElement) {
+            classElement.style.display = 'block';
+        });
+    }
+}
+</script>
+<footer>
+    <p>&copy; 2025梨花祭　千葉英和高校生徒会. All rights reserved.</p>
+  </footer>
+</body>
+</html>
