@@ -36,7 +36,9 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
   />
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> <!-- FontAwesome -->
-  <style>
+ <style>
+    /* 表示されないようにしたいCSS（ここもコメントアウトOK） */
+    /*
     body {
       margin: 0;
       padding: 0;
@@ -100,15 +102,17 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    */
   </style>
 </head>
 <body>
+  <!--
   <h1>梨花祭 2025</h1>
   <h1>7月19日 一般公開</h1>  
   <p>ただいま、特設サイトを準備中です。</p>
+
   <div class="countdown" id="countdown">公開まであと --日</div>
 
-  <!-- SNSリンク -->
   <div class="social-links">
     <a href="https://www.instagram.com/rikasai_ceh" target="_blank" aria-label="Instagram">
       <i class="fab fa-instagram"></i>
@@ -118,8 +122,7 @@
     </a>
   </div>
 
-  <div class="footer">千葉英和高校 梨花祭運営委員・
-  広報</div>
+  <div class="footer">千葉英和高校 梨花祭運営委員・広報</div>
 
   <script>
     const targetDate = new Date("2025-07-19");
@@ -139,4 +142,21 @@
     updateCountdown();
     setInterval(updateCountdown, 1000 * 60 * 60);
   </script>
+  -->
 </body>
+</html>
+✅ 方法2：完全に空のページにする（表示を一時ゼロに）
+html
+コピーする
+編集する
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>準備中</title>
+</head>
+<body>
+  <!-- 表示なし -->
+</body>
+</html>
